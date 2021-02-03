@@ -1,0 +1,21 @@
+//SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.1;
+
+contract MyContract {
+    
+    mapping(address => uint64) public balanceReceived;
+
+    function receiveMoney() public payable {
+        assert(balanceReceived[msg.sender] + uint64(msg.value) >= balanceReceived[msg.sender]);
+        balanceReceived[msg.sender] += uint64(msg.value);
+    }
+
+    function withdrawMoney(address payable _to, uint _amount) public {
+        require(_amount <= balanceReceived[msg.sender], "not enough funds.");
+        assert(balanceReceived[msg.sender] >= balanceReceived[msg.sender] - _amount);
+        balanceReceived[msg.sender] -= uint64(_amount);
+        _to.transfer(_amount);
+    }  
+    
+}
